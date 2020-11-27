@@ -1,0 +1,83 @@
+################################################################################
+# Program Name: Tip and Tax Calculator
+# Programmer: Rebecca Pugh
+# Date Created: November 24th, 2020
+# Last Date Modified: November 27th, 2020
+# Last Modified by:
+# Description: A program that asks for individualized input including the 
+# base price of a bill, the tax rate for the area and how many people are
+# to split the cost. It outputs the above information as well as separate amounts
+# for the tip amount and total cost including tip and tax
+###############################################################################
+
+# Import OS for os.system('pause')
+import os
+
+# Setting the restart of the program to true
+start_over = True
+
+# while restart of the program is true:
+while start_over is True:
+    try:
+        # How many people are splitting the bill. Is split between 1 guest and multi guest
+        number_of_bill_guests = int(input("How many guests are splitting the bill?: "))
+        # Input of the total bill, pre-tax
+        base_sale_price = float(input("What is your total, before tax?: "))
+        # Input of the tax percent in the form of a full number, will be converted to a decimal number
+        tax_percent = int(input("What is the tax percentage in your province/state?: "))        
+        
+        # Conversion of tax_percent to a decimal number
+        def tax_rate(tax_percent):
+            return tax_percent / 100
+
+        # Returns the amount of tax based on the base_sale_price ex (0.13 * 30)
+        def solo_guest_tip_amount(base_sale_price, tax_rate):
+            return base_sale_price * tax_rate
+
+        # Returns base price plus the tax amount of the base sale price
+        def base_sale_price_plus_tax(base_sale_price, solo_guest_tip_amount):
+            return base_sale_price + (solo_guest_tip_amount * 2)
+
+        # For multi-guests, returns the amount of base_sale_price / the number of multi-guests
+        def base_cost_per_person(base_sale_price, number_of_bill_guests):
+            return base_sale_price / number_of_bill_guests
+
+        # Returns the amount of tax for multi-guests
+        def tip_per_person(base_cost_per_person, tax_rate):
+            return base_cost_per_person * tax_rate
+
+        # Returns the total cost per multi-guest, base cost in addition to the individual multi-guest tax amount
+        def total_cost_per_person(base_cost_per_person, tip_per_person):
+            return base_cost_per_person + (tip_per_person * 2)
+
+        # If there is only 1 person per bill
+        if number_of_bill_guests == 1:        
+            # Produces a string with tax rate, base sale amount, the tax and the base + tax
+            # Formatted to two decimal places
+            print("With a tax percent of: " + str(tax_percent) + "% and a base sale price of: $" + str(base_sale_price) + ", the total tip is: $" + str("{:.2f}".format(solo_guest_tip_amount(base_sale_price, tax_rate(tax_percent)))) + " for a total of: $" + str("{:.2f}".format(base_sale_price_plus_tax(base_sale_price, solo_guest_tip_amount(base_sale_price, tax_rate(tax_percent))))) + " including tip")
+
+                
+        # If there are multiple guests on the bill that need to split the amount
+        elif number_of_bill_guests >= 2:
+            # Print the tax rate, base sale price, number of guests, the cost per guest, the tip amount per guest and the total amount per guest including tip and tax
+            # Formatted to two decimal places
+            print("With a tax percent of: " + str(tax_percent) + "% and a base sale price: $" + str(base_sale_price) + " and split between " + str(number_of_bill_guests) + ", the cost per person is: $" + str("{:.2f}".format(base_cost_per_person(base_sale_price, number_of_bill_guests))) + " and each person pays $" + str("{:.2f}".format(tip_per_person(base_cost_per_person(base_sale_price, number_of_bill_guests), tax_rate(tax_percent)))) + " in tip for a total of: $" + str("{:.2f}".format(total_cost_per_person(base_cost_per_person(base_sale_price, number_of_bill_guests), tip_per_person(base_cost_per_person(base_sale_price, number_of_bill_guests), tax_rate(tax_percent))))) + " including tax")       
+    
+    # If anything but a number is entered, restart the program
+    except ValueError:
+        print("Please enter a valid number")
+        start_over = True
+        
+        
+        # Input to determine if program is going to be run again
+        start_again = input("Would you like to calculate another bill?: ").lower().strip()
+        
+        # If input is variations of no, end the program, else restart the program
+        if start_again == "no":
+            start_over = False
+            os.system('pause')
+        elif start_again == "n":
+            start_over = False
+            os.system('pause')
+        else: 
+            start_over = True
